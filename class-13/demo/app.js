@@ -39,4 +39,8 @@ console.log('this is my cats from Local Storage', catsFromLocalStorage);
 var catsTurnedBackIntoJavaScript = JSON.parse(catsFromLocalStorage);
 console.log('my parsed cats', catsTurnedBackIntoJavaScript);
 
+// loop over this array
+// for each cat, I need to make a new object instance using my constructor
+// new Cat(obj[i].name, obj[i].age, obj[i].isLoud, obj[i].catNip)
+
 // the returned cats array is now a normal array of objects - it has lost its connection to the constructor
