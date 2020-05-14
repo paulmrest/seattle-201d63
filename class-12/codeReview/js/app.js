@@ -6,18 +6,50 @@ var parentElement = document.getElementById('container');
 var totalVotes = 0;
 var names = [];
 var votes = [];
+
+// check our Local Storage to see if we have an array of products
+if(localStorage.getItem('items') === null){
+  // if we do NOT
+      // we need to instantiate our object instances for the first time just like we have been
+  new BusmallImage('bag', '.jpg');
+  new BusmallImage('banana', '.jpg');
+  new BusmallImage('bathroom', '.jpg');
+  new BusmallImage('boots', '.jpg');
+  new BusmallImage('breakfast', '.jpg');
+  new BusmallImage('bubblegum', '.jpg');
+  new BusmallImage('chair', '.jpg');
+  new BusmallImage('cthulhu', '.jpg');
+
+} else {
+  // if we DO have products in local storage
+      // get them out
+      // parse them
+      // connect them back to our constructor
+      // use this as our allBusMall array
+  var localStorageItems = localStorage.getItem('items');
+  var parsedLocalStorageArray = JSON.parse(localStorageItems);
+  console.log('this is my parsed array', parsedLocalStorageArray);
+  for(var i=0; i<parsedLocalStorageArray.length; i++){
+    new BusmallImage(
+      parsedLocalStorageArray[i].title, 
+      parsedLocalStorageArray[i].filepath.slice(parsedLocalStorageArray[i].filepath.length-4), 
+      parsedLocalStorageArray[i].views, 
+      parsedLocalStorageArray[i].votes);
+  }
+}
+
 // render three images to the DOM
   // create a constructor function
     // filepath
     // alt
     // title
     // push object instance into an array
-function BusmallImage(name, extension){
+function BusmallImage(name, extension, views=0, votes=0){
   this.filepath = `images/${name}${extension}`;
   this.alt = name;
   this.title = name;
-  this.votes = 0;
-  this.views = 0;
+  this.votes = votes;
+  this.views = views;
   allBusMall.push(this);
 }
 
@@ -29,15 +61,6 @@ BusmallImage.prototype.render = function(){
   imageElement.title = this.title;
   parentElement.appendChild(imageElement);
 }
-
-new BusmallImage('bag', '.jpg');
-new BusmallImage('banana', '.jpg');
-new BusmallImage('bathroom', '.jpg');
-new BusmallImage('boots', '.jpg');
-new BusmallImage('breakfast', '.jpg');
-new BusmallImage('bubblegum', '.jpg');
-new BusmallImage('chair', '.jpg');
-new BusmallImage('cthulhu', '.jpg');
 
 function getRandomIndex(){
 
@@ -87,10 +110,15 @@ function handleClick(event){
       allBusMall[i].votes++;
       totalVotes++;
 
+      // save our allBusMall array into local storage
+      var stringifiedBusMallArray = JSON.stringify(allBusMall);
+      localStorage.setItem('items', stringifiedBusMallArray);
+
       if(totalVotes === 25){
         // turn off event listener
         parentElement.removeEventListener('click', handleClick);
         makeNamesArray();
+        
       }
     }
   }
